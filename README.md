@@ -1,6 +1,6 @@
 ## Media Key Helper
 
-Media Key Helper is a small command line tool to control the system volume on Haiku OS.  It is a more powerful version of the `setvolume` command included with Haiku and was written so that I could set keyboard shortcuts to toggle the mute and adjust the volume incrementally.
+Media Key Helper is a small command line tool to control the system volume of the Haiku operating system.  It is a more powerful version of the `setvolume` command included with Haiku and was written so that I could set keyboard shortcuts to toggle the mute and adjust the volume incrementally.
 
 ------------------------------------------------------------
 
