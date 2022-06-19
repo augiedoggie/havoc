@@ -29,7 +29,7 @@ const struct poptOption optionsTable[] = {
 
 int main(int argc, char** argv)
 {
-	poptContext optionContext = poptGetContext("MediaKeyHelper", argc, (const char**)argv, optionsTable, 0);
+	poptContext optionContext = poptGetContext("VolumeControl", argc, (const char**)argv, optionsTable, 0);
 
 	int rc = poptGetNextOpt(optionContext);
 	if (rc < -1) {
