@@ -1,26 +1,12 @@
+#=============================================================================
+# SPDX-FileCopyrightText: 2021 Chris Roberts
+#
+# SPDX-License-Identifier: MIT
+#=============================================================================
+
 #
 # - Haiku module for CMake
 #
-# Released under MIT license:
-#
-# Copyright (c) 2010-2021 Chris Roberts
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy of
-# this software and associated documentation files (the "Software"), to deal in
-# the Software without restriction, including without limitation the rights to
-# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-# the Software, and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 #
@@ -35,7 +21,7 @@ endif()
 #
 #	Find the proper stdc++ library
 #
-find_library(LIBSTDCPP NAMES "stdc++" "stdc++.r4")
+find_library(HAIKU_LIBSTDCPP NAMES "stdc++" "stdc++.r4")
 
 
 #
@@ -58,7 +44,7 @@ if(HAIKU_ENABLE_I18N)
 	  COMMAND "${CMAKE_COMMAND}" "-DCMAKE_INSTALL_COMPONENT=locales" "-P" "${CMAKE_BINARY_DIR}/cmake_install.cmake"
 	)
 
-	if (NOT DEFINED CMAKE_INSTALL_LOCALEDIR)
+	if(NOT DEFINED CMAKE_INSTALL_LOCALEDIR)
 		set(CMAKE_INSTALL_LOCALEDIR "data/locale")
 	endif()
 
@@ -71,7 +57,7 @@ endif()
 function(haiku_add_executable TARGET)
 
 	foreach(arg ${ARGN})
-		if (${arg} MATCHES ".*rdef$")
+		if(${arg} MATCHES ".*rdef$")
 			list(APPEND rdeflist ${arg})
 		elseif(${arg} MATCHES ".*rsrc$")
 			list(APPEND rsrclist "${CMAKE_CURRENT_SOURCE_DIR}/${arg}")
@@ -104,7 +90,7 @@ endfunction()
 function(haiku_add_addon TARGET)
 
 	foreach(arg ${ARGN})
-		if (${arg} MATCHES ".*rdef$")
+		if(${arg} MATCHES ".*rdef$")
 			list(APPEND rdeflist ${arg})
 		elseif(${arg} MATCHES ".*rsrc$")
 			list(APPEND rsrclist "${CMAKE_CURRENT_SOURCE_DIR}/${arg}")
