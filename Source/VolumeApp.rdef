@@ -1,4 +1,4 @@
-resource app_signature "application/x-vnd.cpr.MediaKeyHelper";
+resource app_signature "application/x-vnd.cpr.VolumeControl";
 
 resource app_flags B_SINGLE_LAUNCH | B_BACKGROUND_APP | B_ARGV_ONLY;
 
@@ -10,6 +10,6 @@ resource app_version {
 	variety = B_APPV_DEVELOPMENT,
 	internal = 0,
 
-	short_info = "Media Key Helper",
+	short_info = "Volume control",
 	long_info = "Command line tool to control the system volume"
 };

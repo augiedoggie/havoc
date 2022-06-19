@@ -7,7 +7,7 @@ include_directories(popt)
 # Need HAVE_CONFIG_H for popt config definitions
 add_definitions(-DHAVE_CONFIG_H -D_GNU_SOURCE -D_REENTRANT)
 
-haiku_add_executable(mkh main.cpp VolumeControl.cpp MediaKeyHelper.rdef)
+haiku_add_executable(mkh main.cpp VolumeControl.cpp VolumeApp.rdef)
 
 target_link_libraries(mkh media popt)
 
