@@ -9,6 +9,6 @@ add_definitions(-DHAVE_CONFIG_H -D_GNU_SOURCE -D_REENTRANT)
 
 haiku_add_executable(${PROJECT_NAME} main.cpp VolumeControl.cpp VolumeApp.rdef)
 
-target_link_libraries(${PROJECT_NAME} media popt)
+target_link_libraries(${PROJECT_NAME} be media popt)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
