@@ -6,7 +6,11 @@
 #include "VolumeControl.h"
 
 #include <Application.h>
+#include <Bitmap.h>
+#include <IconUtils.h>
 #include <Notification.h>
+#include <Resources.h>
+
 #include <iostream>
 
 
@@ -137,6 +141,34 @@ private:
 	VolumeControl* fVolume;
 	bool fArgReceived;
 	float fNotificationTimeout;
+
+
+	BBitmap* _LoadResourceBitmap(const char* name, int32 size) {
+		BResources* resources = be_app->AppResources();
+		if (resources == NULL)
+			return NULL;
+
+		size_t dataSize;
+		const void* data = resources->LoadResource(B_VECTOR_ICON_TYPE, name, &dataSize);
+		if (data == NULL)
+			return NULL;
+
+		BBitmap* bitmap = new BBitmap(BRect(0, 0, size - 1, size - 1), B_RGBA32);
+		if (bitmap == NULL)
+			return NULL;
+
+		if (bitmap->InitCheck() != B_OK) {
+			delete bitmap;
+			return NULL;
+		}
+
+		if (BIconUtils::GetVectorIcon(static_cast<const uint8*>(data), dataSize, bitmap) != B_OK) {
+			delete bitmap;
+			return NULL;
+		}
+
+		return bitmap;
+	}
 };
 
 
