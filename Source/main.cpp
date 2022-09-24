@@ -44,7 +44,7 @@ public:
 		delete fVolume;
 	}
 
-	virtual void ArgvReceived(int argc, char** argv) {
+	virtual void ArgvReceived(int32 argc, char** argv) {
 
 		fArgReceived = true;
 
