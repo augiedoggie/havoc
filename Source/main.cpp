@@ -118,19 +118,27 @@ public:
 				fVolume->IsMuted() ? "Muted" : "Not Muted");
 
 		if (fNotificationTimeout > 0) {
-			BNotification notification(B_PROGRESS_NOTIFICATION);
-			notification.SetGroup("VolumeControl");
-			notification.SetTitle("System Volume");
-			notification.SetMessageID("volume_control_status");
-			notification.SetProgress((vol - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
-			BString state;
-			state.SetToFormat("Volume: %.1f dB\n\nState: %s", vol, fVolume->IsMuted() ? "Muted" : "Not Muted");
-			notification.SetContent(state);
-			//if (fVolume->IsMuted())
-				//TODO set icon
-
-			notification.Send(fNotificationTimeout * 1000 * 1000);
-			//TODO check status of Send()?
+			BNotification* notification;
+			BString content;
+			if (fVolume->IsMuted()) {
+				notification = new BNotification(B_INFORMATION_NOTIFICATION);
+				BBitmap* bitmap = _LoadResourceBitmap("SpeakerMute", 32);
+				if (bitmap != NULL) {
+					notification->SetIcon(bitmap);
+					delete bitmap;
+				}
+				content = "Audio Muted";
+			} else {
+				notification = new BNotification(B_PROGRESS_NOTIFICATION);
+				notification->SetProgress((vol - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
+				content.SetToFormat("Volume: %.1f dB", vol);
+			}
+			notification->SetContent(content);
+			notification->SetGroup("VolumeControl");
+			notification->SetTitle("System Volume");
+			notification->SetMessageID("volume_control_status");
+			notification->Send(fNotificationTimeout * 1000 * 1000);
+			delete notification;
 		}
 
 		be_app->PostMessage(B_QUIT_REQUESTED);
