@@ -29,7 +29,7 @@ const struct poptOption optionsTable[] = {
 	{ "toggle",	't', POPT_ARG_NONE,		&gToggleArg,	0, "Toggle mute on/off",			NULL },
 	{ "mute",	'm', POPT_ARG_NONE,		&gMuteArg,		0, "Set mute on",					NULL },
 	{ "unmute",	'u', POPT_ARG_NONE,		&gUnMuteArg,	0, "Set mute off",					NULL },
-	{ "notify",	'n', POPT_ARG_FLOAT | POPT_ARGFLAG_OPTIONAL,	&gNotifyArg,	0, "Show system notification and specify optional timeout (default: 1.5 seconds)",	"0,1,1.5,3,..."},
+	{ "notify",	'n', POPT_ARG_FLOAT | POPT_ARGFLAG_OPTIONAL,	&gNotifyArg,	0, "Show system notification and specify optional timeout (default: 1.5 seconds)",	"1,1.5,3,..."},
 	POPT_AUTOHELP
 	POPT_TABLEEND
 };
@@ -39,14 +39,16 @@ class MixerApp : public BApplication {
 public:
 	MixerApp()
 		:	BApplication("application/x-vnd.cpr.VolumeControl"),
-			fVolume(new VolumeControl()),
 			fArgReceived(false),
-			fNotificationTimeout(kInitialArgVal)
+			fNotificationTimeout(kInitialArgVal),
+			fVolume(new VolumeControl())
 		{}
+
 
 	virtual ~MixerApp() {
 		delete fVolume;
 	}
+
 
 	virtual void ArgvReceived(int32 argc, char** argv) {
 
@@ -108,6 +110,7 @@ public:
 
 	}
 
+
 	virtual void ReadyToRun() {
 		float vol = fVolume->GetVolume();
 		if (vol == 0)
@@ -148,9 +151,9 @@ public:
 
 
 private:
-	VolumeControl* fVolume;
-	bool fArgReceived;
-	float fNotificationTimeout;
+	bool			fArgReceived;
+	float			fNotificationTimeout;
+	VolumeControl*	fVolume;
 
 
 	BBitmap* _LoadResourceBitmap(const char* name, int32 size) {
@@ -182,7 +185,7 @@ private:
 };
 
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
 	try {
 		MixerApp app;
