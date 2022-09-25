@@ -18,11 +18,35 @@ Usage: mkh [OPTION...]
   -t, --toggle                          Toggle mute on/off
   -m, --mute                            Set mute on
   -u, --unmute                          Set mute off
+  -n, --notify[=0,1,1.5,3,...]          Show system notification and specify
+                                        optional timeout (default: 1.5 seconds)
 
 Help options:
   -?, --help                            Show this help message
       --usage                           Display brief usage message
 ```
+
+### Command Examples
+
+```
+$ mkh -t -n
+```
+Toggle mute on or off and show a notification
+
+```
+$ mkh -a 1.5 -n 3
+```
+Increase volume by 1.5 dB and show a notification for 3 seconds
+
+```
+$ mkh -a -5 -n
+```
+Decrease volume by 5 dB and show a notification
+
+```
+$ mkh -n 10
+```
+Show a notification with the current status for 10 seconds
 
 ### Build Instructions
 
