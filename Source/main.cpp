@@ -64,7 +64,7 @@ public:
 		poptFreeContext(optionContext);
 
 		if (gNotifyArg != kInitialArgVal) {
-			if (gNotifyArg == 0)
+			if (gNotifyArg <= 0)
 				fNotificationTimeout = 1.5; // use our default timeout
 			else
 				fNotificationTimeout = gNotifyArg;
