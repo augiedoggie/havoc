@@ -110,10 +110,12 @@ public:
 
 	virtual void ReadyToRun() {
 		float vol = fVolume->GetVolume();
+		if (vol == 0)
+			vol = 0.0; // avoid a floating point -0
 
 		if (!fArgReceived)
 			// no arguments were given, just print our current state
-			printf("Volume: %.1f (min=%.1f, max=%.1f, step=%.1f)\nState: %s\n",
+			printf("Volume: %g (min=%g, max=%g, step=%g)\nState: %s\n",
 				vol, fVolume->GetMinVolume(), fVolume->GetMaxVolume(), fVolume->GetStepSize(),
 				fVolume->IsMuted() ? "Muted" : "Not Muted");
 
@@ -131,7 +133,7 @@ public:
 			} else {
 				notification = new BNotification(B_PROGRESS_NOTIFICATION);
 				notification->SetProgress((vol - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
-				content.SetToFormat("Volume: %.1f dB", vol);
+				content.SetToFormat("Volume: %g dB", vol);
 			}
 			notification->SetContent(content);
 			notification->SetGroup("VolumeControl");
