@@ -1,6 +1,6 @@
 ## Haiku Advanced Volume Control
 
-`havoc` is a small command line tool to control the system volume of the Haiku operating system.  It is a more powerful version of the `setvolume` command included with Haiku and was written so that I could set keyboard shortcuts to toggle the mute and adjust the volume incrementally.
+`havoc` is a small command line tool to control the system volume of the Haiku operating system.  It is intended to be used with the standard `Shortcuts` application so that keyboard shortcuts can be set to toggle the mute and adjust the volume incrementally.
 
 ------------------------------------------------------------
 
