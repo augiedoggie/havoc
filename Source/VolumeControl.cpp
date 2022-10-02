@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2021 Chris Roberts
+// SPDX-FileCopyrightText: 2021 Chris Roberts
 
 #include "VolumeControl.h"
 
@@ -9,9 +9,9 @@
 
 VolumeControl::VolumeControl()
 	:
+	fInitStatus(B_NOT_INITIALIZED),
 	fGainParameter(NULL),
-	fMuteParameter(NULL),
-	fInitStatus(B_NOT_INITIALIZED)
+	fMuteParameter(NULL)
 {
 	//Get global media roster
 	BMediaRoster* roster = BMediaRoster::Roster();
@@ -68,13 +68,15 @@ VolumeControl::VolumeControl()
 }
 
 
-status_t VolumeControl::InitCheck()
+status_t
+VolumeControl::InitCheck()
 {
 	return fInitStatus;
 }
 
 
-status_t VolumeControl::GetVolume(float *volume)
+status_t
+VolumeControl::GetVolume(float* volume)
 {
 	if (volume == NULL)
 		return B_ERROR;
@@ -89,25 +91,29 @@ status_t VolumeControl::GetVolume(float *volume)
 }
 
 
-float VolumeControl::GetMinVolume()
+float
+VolumeControl::GetMinVolume()
 {
 	return fGainParameter->MinValue();
 }
 
 
-float VolumeControl::GetMaxVolume()
+float
+VolumeControl::GetMaxVolume()
 {
 	return fGainParameter->MaxValue();
 }
 
 
-float VolumeControl::GetStepSize()
+float
+VolumeControl::GetStepSize()
 {
 	return fGainParameter->ValueStep();
 }
 
 
-bool VolumeControl::IsMuted()
+bool
+VolumeControl::IsMuted()
 {
 	int32 isMuted = 0;
 	size_t size = sizeof(isMuted);
@@ -118,7 +124,8 @@ bool VolumeControl::IsMuted()
 }
 
 
-status_t VolumeControl::AdjustVolume(float adjustment)
+status_t
+VolumeControl::AdjustVolume(float adjustment)
 {
 	float volume;
 	if (GetVolume(&volume) != B_OK)
@@ -128,7 +135,8 @@ status_t VolumeControl::AdjustVolume(float adjustment)
 }
 
 
-status_t VolumeControl::SetVolume(float volume)
+status_t
+VolumeControl::SetVolume(float volume)
 {
 	float minVolume = GetMinVolume();
 	float maxVolume = GetMaxVolume();
@@ -143,7 +151,8 @@ status_t VolumeControl::SetVolume(float volume)
 }
 
 
-status_t VolumeControl::ToggleMute()
+status_t
+VolumeControl::ToggleMute()
 {
 	int32 isMuted = 0;
 	size_t size = sizeof(isMuted);
@@ -156,7 +165,8 @@ status_t VolumeControl::ToggleMute()
 }
 
 
-status_t VolumeControl::SetMute(bool muted)
+status_t
+VolumeControl::SetMute(bool muted)
 {
 	int32 isMuted = muted;
 	return fMuteParameter->SetValue(&isMuted, sizeof(isMuted), 0);

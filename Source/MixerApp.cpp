@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2021 Chris Roberts
+// SPDX-FileCopyrightText: 2021 Chris Roberts
 
 
 #include "popt/system.h"
@@ -38,10 +38,11 @@ const struct poptOption optionsTable[] = {
 class MixerApp : public BApplication {
 public:
 	MixerApp()
-		:	BApplication("application/x-vnd.cpr.VolumeControl"),
-			fArgReceived(false),
-			fNotificationTimeout(kInitialArgVal),
-			fVolume(new VolumeControl())
+		:
+		BApplication("application/x-vnd.cpr.VolumeControl"),
+		fArgReceived(false),
+		fNotificationTimeout(kInitialArgVal),
+		fVolume(new VolumeControl())
 		{}
 
 
@@ -110,7 +111,6 @@ public:
 			return;
 
 		poptPrintHelp(optionContext, stderr, 0);
-
 	}
 
 
@@ -153,6 +153,7 @@ public:
 				notification->SetProgress((volume - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
 				outputString.SetToFormat("Volume: %g dB", volume);
 			}
+
 			notification->SetContent(outputString);
 			notification->SetGroup("VolumeControl");
 			notification->SetTitle("System Volume");
@@ -200,7 +201,8 @@ private:
 };
 
 
-int main(int /*argc*/, char** /*argv*/)
+int
+main(int /*argc*/, char** /*argv*/)
 {
 	MixerApp app;
 	app.Run();
