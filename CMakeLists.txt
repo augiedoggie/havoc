@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(mkh)
+project(havoc)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 

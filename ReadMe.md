@@ -1,18 +1,18 @@
-## Media Key Helper
+## Haiku Advanced Volume Control
 
-Media Key Helper is a small command line tool to control the system volume of the Haiku operating system.  It is a more powerful version of the `setvolume` command included with Haiku and was written so that I could set keyboard shortcuts to toggle the mute and adjust the volume incrementally.
+`havoc` is a small command line tool to control the system volume of the Haiku operating system.  It is a more powerful version of the `setvolume` command included with Haiku and was written so that I could set keyboard shortcuts to toggle the mute and adjust the volume incrementally.
 
 ------------------------------------------------------------
 
-Output from running `mkh` with no arguments:
+Output from running `havoc` with no arguments:
 ```
-Volume: -0.0 (min=-60.0, max=18.0, step=0.1)
+Volume: 0 (min=-60, max=18, step=0.1)
 State: Not Muted
 ```
 
-The list of options in the `mkh --help` output:
+The list of options in the `havoc --help` output:
 ```
-Usage: mkh [OPTION...]
+Usage: havoc [OPTION...]
   -a, --adjust=[1,-2.5,-4,9.5,...]      Increase/decrease volume by X
   -v, --volume=[-60,-20.5,0,18,...]     Set absolute volume level
   -t, --toggle                          Toggle mute on/off
@@ -29,28 +29,29 @@ Help options:
 ### Command Examples
 
 ```
-$ mkh -t -n
+$ havoc -t -n
 ```
 Toggle mute on or off and show a notification
 
 ```
-$ mkh -a 1.5 -n 3
+$ havoc -a 1.5 -n 3
 ```
 Increase volume by 1.5 dB and show a notification for 3 seconds
 
 ```
-$ mkh -a -5 -n
+$ havoc -a -5 -n
 ```
 Decrease volume by 5 dB and show a notification
 
 ```
-$ mkh -n 10
+$ havoc -n 10
 ```
 Show a notification with the current status for 10 seconds
 
 ### Build Instructions
 
 ```
-cmake .
-make
+$ cd havoc
+$ cmake .
+$ make
 ```
