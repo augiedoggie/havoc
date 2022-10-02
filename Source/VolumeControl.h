@@ -9,17 +9,28 @@
 #include <SupportDefs.h>
 
 
+enum {
+	kRosterError = B_ERRORS_END + 1,
+	kMixerError,
+	kParameterWebError,
+	kGainError,
+	kMuteError
+};
+
+
 class VolumeControl {
 
 public:
 	VolumeControl();
+
+	status_t InitCheck();
 
 	status_t AdjustVolume(float adjustment);
 	status_t SetVolume(float volume);
 	status_t ToggleMute();
 	status_t SetMute(bool muted);
 
-	float GetVolume();
+	status_t GetVolume(float* volume);
 	float GetMinVolume();
 	float GetMaxVolume();
 	float GetStepSize();
@@ -28,6 +39,7 @@ public:
 private:
 	BContinuousParameter* fGainParameter;
 	BDiscreteParameter* fMuteParameter;
+	status_t fInitStatus;
 };
 
 #endif	// _VOLUMECONTROL_H_

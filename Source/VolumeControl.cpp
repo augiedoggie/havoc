@@ -6,33 +6,37 @@
 #include <MediaRoster.h>
 #include <ParameterWeb.h>
 
-#include <stdexcept>
-
 
 VolumeControl::VolumeControl()
 	:
 	fGainParameter(NULL),
-	fMuteParameter(NULL)
+	fMuteParameter(NULL),
+	fInitStatus(B_NOT_INITIALIZED)
 {
 	//Get global media roster
 	BMediaRoster* roster = BMediaRoster::Roster();
-	if (roster == NULL)
-		throw std::runtime_error("Unable to get media roster!");
+	if (roster == NULL) {
+		fInitStatus = kRosterError;
+		return;
+	}
 
 	//Get system mixer
 	media_node mixer;
 	status_t status = roster->GetAudioMixer(&mixer);
-	if (status != B_OK)
-		throw std::runtime_error("Can't get audio mixer!");
+	if (status != B_OK) {
+		fInitStatus = kMixerError;
+		return;
+	}
 
 	BParameterWeb* web;
 	status = roster->GetParameterWebFor(mixer, &web);
 
 	roster->ReleaseNode(mixer);
 
-	if (status != B_OK)
-		throw std::runtime_error("Can't get mixer parameter web!");
-
+	if (status != B_OK) {
+		fInitStatus = kParameterWebError;
+		return;
+	}
 
 	BParameter* parameter;
 	for (int32 index = 0; (parameter = web->ParameterAt(index)) != NULL; index++) {
@@ -42,8 +46,10 @@ VolumeControl::VolumeControl()
 		}
 	}
 
-	if (fGainParameter == NULL)
-		throw std::runtime_error("Couldn't find master gain control!");
+	if (fGainParameter == NULL) {
+		fInitStatus = kGainError;
+		return;
+	}
 
 
 	for (int32 index = 0; (parameter = web->ParameterAt(index)) != NULL; index++) {
@@ -53,20 +59,33 @@ VolumeControl::VolumeControl()
 		}
 	}
 
-	if (fMuteParameter == NULL)
-		throw std::runtime_error("Couldn't find mute control!");
+	if (fMuteParameter == NULL) {
+		fInitStatus = kMuteError;
+		return;
+	}
 
+	fInitStatus = B_OK;
 }
 
 
-float VolumeControl::GetVolume()
+status_t VolumeControl::InitCheck()
 {
-	float currentVolume = 0.0;
-	size_t size = sizeof(&currentVolume);
-	if (fGainParameter->GetValue(&currentVolume, &size, NULL) != B_OK || isnan(currentVolume))
-		throw std::runtime_error("Couldn't get current volume");
+	return fInitStatus;
+}
 
-	return currentVolume;
+
+status_t VolumeControl::GetVolume(float *volume)
+{
+	if (volume == NULL)
+		return B_ERROR;
+
+	size_t size = sizeof(*volume);
+	if (fGainParameter->GetValue(volume, &size, NULL) != B_OK || isnan(*volume)) {
+		*volume = -99.0;
+		return B_ERROR;
+	}
+
+	return B_OK;
 }
 
 
@@ -101,7 +120,11 @@ bool VolumeControl::IsMuted()
 
 status_t VolumeControl::AdjustVolume(float adjustment)
 {
-	return SetVolume(GetVolume() + adjustment);
+	float volume;
+	if (GetVolume(&volume) != B_OK)
+		return B_ERROR;
+
+	return SetVolume(volume + adjustment);
 }
 
 

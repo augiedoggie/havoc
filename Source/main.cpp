@@ -72,6 +72,9 @@ public:
 				fNotificationTimeout = gNotifyArg;
 		}
 
+		if (fVolume->InitCheck() != B_OK)
+			return;
+
 		if (gAdjustArg != 0) {
 			std::cout << "Adjust volume: " << gAdjustArg << std::endl;
 			fVolume->AdjustVolume(gAdjustArg);
@@ -112,33 +115,45 @@ public:
 
 
 	virtual void ReadyToRun() {
-		float vol = fVolume->GetVolume();
-		if (vol == 0)
-			vol = 0.0; // avoid a floating point -0
+		float volume = kInitialArgVal;
+		BString outputString;
 
-		if (!fArgReceived)
-			// no arguments were given, just print our current state
-			printf("Volume: %g (min=%g, max=%g, step=%g)\nState: %s\n",
-				vol, fVolume->GetMinVolume(), fVolume->GetMaxVolume(), fVolume->GetStepSize(),
+		if (fVolume->InitCheck() == B_OK) {
+			if (fVolume->GetVolume(&volume) != B_OK)
+				outputString = "Error getting volume from mixer";
+		} else
+			outputString = "Error initializing mixer control";
+
+		if (volume == 0)
+			volume = 0.0; // avoid a floating point -0
+
+		if (volume != kInitialArgVal && !fArgReceived)
+			// no arguments were given, just list our current state
+			outputString.SetToFormat("Volume: %g (min=%g, max=%g, step=%g)\nState: %s",
+				volume, fVolume->GetMinVolume(), fVolume->GetMaxVolume(), fVolume->GetStepSize(),
 				fVolume->IsMuted() ? "Muted" : "Not Muted");
+
+		if (outputString.Length() > 0)
+			std::cout << outputString << std::endl;
 
 		if (fNotificationTimeout > 0) {
 			BNotification* notification;
-			BString content;
-			if (fVolume->IsMuted()) {
+			if (volume == kInitialArgVal)
+				notification = new BNotification(B_ERROR_NOTIFICATION);
+			else if (fVolume->IsMuted()) {
 				notification = new BNotification(B_INFORMATION_NOTIFICATION);
 				BBitmap* bitmap = _LoadResourceBitmap("SpeakerMute", 32);
 				if (bitmap != NULL) {
 					notification->SetIcon(bitmap);
 					delete bitmap;
 				}
-				content = "Audio Muted";
+				outputString = "Audio Muted";
 			} else {
 				notification = new BNotification(B_PROGRESS_NOTIFICATION);
-				notification->SetProgress((vol - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
-				content.SetToFormat("Volume: %g dB", vol);
+				notification->SetProgress((volume - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
+				outputString.SetToFormat("Volume: %g dB", volume);
 			}
-			notification->SetContent(content);
+			notification->SetContent(outputString);
 			notification->SetGroup("VolumeControl");
 			notification->SetTitle("System Volume");
 			notification->SetMessageID("volume_control_status");
@@ -187,13 +202,8 @@ private:
 
 int main(int /*argc*/, char** /*argv*/)
 {
-	try {
-		MixerApp app;
-		app.Run();
-	} catch(std::exception &e) {
-		std::cout << std::endl << "Error: " << e.what() << std::endl;
-		return 1;
-	}
+	MixerApp app;
+	app.Run();
 
 	return 0;
 }
