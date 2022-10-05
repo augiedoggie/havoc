@@ -34,9 +34,9 @@ $ havoc -t -n
 Toggle mute on or off and show a notification
 
 ```
-$ havoc -a 1.5 -n 3
+$ havoc -u -a 1.5 -n 3
 ```
-Increase volume by 1.5 dB and show a notification for 3 seconds
+Un-mute, increase volume by 1.5 dB, and show a notification for 3 seconds
 
 ```
 $ havoc -a -5 -n

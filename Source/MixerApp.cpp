@@ -76,6 +76,18 @@ public:
 		if (fVolume->InitCheck() != B_OK)
 			return;
 
+		// don't return after changing mute so we can also adjust volume
+		if (gToggleArg != 0) {
+			std::cout << (fVolume->IsMuted() ? "Un-Muting" : "Muting") << std::endl;
+			fVolume->ToggleMute();
+		} else if (gMuteArg != 0) {
+			std::cout << "Muting" << std::endl;
+			fVolume->SetMute(true);
+		} else if (gUnMuteArg != 0) {
+			std::cout << "Un-Muting" << std::endl;
+			fVolume->SetMute(false);
+		}
+
 		if (gAdjustArg != 0) {
 			std::cout << "Adjust volume: " << gAdjustArg << std::endl;
 			fVolume->AdjustVolume(gAdjustArg);
@@ -89,28 +101,12 @@ public:
 			return;
 		}
 
-		if (gToggleArg != 0) {
-			std::cout << (fVolume->IsMuted() ? "Un-Muting" : "Muting") << std::endl;
-			fVolume->ToggleMute();
-			return;
-		}
-
-		if (gMuteArg != 0) {
-			std::cout << "Muting" << std::endl;
-			fVolume->SetMute(true);
-			return;
-		}
-
-		if (gUnMuteArg != 0) {
-			std::cout << "Un-Muting" << std::endl;
-			fVolume->SetMute(false);
-			return;
-		}
-
+		// only a notification for the current status was requested
 		if (fNotificationTimeout != kInitialArgVal)
 			return;
 
-		poptPrintHelp(optionContext, stderr, 0);
+		if (gToggleArg == 0 && gMuteArg == 0 && gUnMuteArg == 0) // changing mute doesn't return early
+			poptPrintHelp(optionContext, stderr, 0);
 	}
 
 
