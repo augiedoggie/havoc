@@ -150,9 +150,8 @@ public:
 				outputString.SetToFormat("Gain: %g dB", volume);
 			}
 
-			notification->SetContent(outputString);
-			notification->SetGroup("VolumeControl");
-			notification->SetTitle("System Volume");
+			notification->SetTitle(outputString);
+			notification->SetGroup("System Volume");
 			notification->SetMessageID("volume_control_status");
 			notification->Send(fNotificationTimeout * 1000 * 1000);
 			delete notification;
