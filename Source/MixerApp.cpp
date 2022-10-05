@@ -66,6 +66,7 @@ public:
 
 		poptFreeContext(optionContext);
 
+		// compare against kInitialArgVal because '-n' will actually be '-n=0'
 		if (gNotifyArg != kInitialArgVal) {
 			if (gNotifyArg <= 0)
 				fNotificationTimeout = 1.5; // use our default timeout
@@ -101,12 +102,15 @@ public:
 			return;
 		}
 
+		// we can return if we've handled a mute arg
+		if (gToggleArg != 0 || gMuteArg != 0 || gUnMuteArg != 0)
+			return;
+
 		// only a notification for the current status was requested
 		if (fNotificationTimeout != kInitialArgVal)
 			return;
 
-		if (gToggleArg == 0 && gMuteArg == 0 && gUnMuteArg == 0) // changing mute doesn't return early
-			poptPrintHelp(optionContext, stderr, 0);
+		poptPrintHelp(optionContext, stderr, 0);
 	}
 
 
@@ -116,9 +120,9 @@ public:
 
 		if (fVolume->InitCheck() == B_OK) {
 			if (fVolume->GetVolume(&volume) != B_OK)
-				outputString = "Error getting volume from mixer";
+				outputString = "Error getting volume from mixer!";
 		} else
-			outputString = "Error initializing mixer control";
+			outputString = "Error initializing mixer control!";
 
 		if (volume == 0)
 			volume = 0.0; // avoid a floating point -0
