@@ -24,11 +24,11 @@ int gUnMuteArg = 0;
 float gNotifyArg = kInitialArgVal;
 
 const struct poptOption optionsTable[] = {
-	{ "adjust",	'a', POPT_ARG_FLOAT,	&gAdjustArg,	0, "Increase/decrease volume by X",	"[1,-2.5,-4,9.5,...]" },
-	{ "volume",	'v', POPT_ARG_FLOAT,	&gVolumeArg,	0, "Set absolute volume level",		"[-60,-20.5,0,18,...]" },
-	{ "toggle",	't', POPT_ARG_NONE,		&gToggleArg,	0, "Toggle mute on/off",			NULL },
-	{ "mute",	'm', POPT_ARG_NONE,		&gMuteArg,		0, "Set mute on",					NULL },
-	{ "unmute",	'u', POPT_ARG_NONE,		&gUnMuteArg,	0, "Set mute off",					NULL },
+	{ "adjust",	'a', POPT_ARG_FLOAT,	&gAdjustArg,	0, "Increase/decrease volume by X dB",	"[1,-2.5,-4,9.5,...]" },
+	{ "volume",	'v', POPT_ARG_FLOAT,	&gVolumeArg,	0, "Set absolute volume dB level",		"[-60,-20.5,0,18,...]" },
+	{ "toggle",	't', POPT_ARG_NONE,		&gToggleArg,	0, "Toggle mute on/off",				NULL },
+	{ "mute",	'm', POPT_ARG_NONE,		&gMuteArg,		0, "Set mute on",						NULL },
+	{ "unmute",	'u', POPT_ARG_NONE,		&gUnMuteArg,	0, "Set mute off",						NULL },
 	{ "notify",	'n', POPT_ARG_FLOAT | POPT_ARGFLAG_OPTIONAL,	&gNotifyArg,	0, "Show system notification and specify optional timeout (default: 1.5 seconds)",	"1,1.5,3,..."},
 	POPT_AUTOHELP
 	POPT_TABLEEND
@@ -129,7 +129,7 @@ public:
 
 		if (volume != kInitialArgVal && !fArgReceived)
 			// no arguments were given, just list our current state
-			outputString.SetToFormat("Volume: %g (min=%g, max=%g, step=%g)\nState: %s",
+			outputString.SetToFormat("Volume(gain): %g (min=%g, max=%g, step=%g)\nState: %s",
 				volume, fVolume->GetMinVolume(), fVolume->GetMaxVolume(), fVolume->GetStepSize(),
 				fVolume->IsMuted() ? "Muted" : "Not Muted");
 
@@ -151,7 +151,7 @@ public:
 			} else {
 				notification = new BNotification(B_PROGRESS_NOTIFICATION);
 				notification->SetProgress((volume - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
-				outputString.SetToFormat("Volume: %g dB", volume);
+				outputString.SetToFormat("Gain: %g dB", volume);
 			}
 
 			notification->SetContent(outputString);

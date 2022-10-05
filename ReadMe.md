@@ -13,12 +13,12 @@ State: Not Muted
 The list of options in the `havoc --help` output:
 ```
 Usage: havoc [OPTION...]
-  -a, --adjust=[1,-2.5,-4,9.5,...]      Increase/decrease volume by X
-  -v, --volume=[-60,-20.5,0,18,...]     Set absolute volume level
+  -a, --adjust=[1,-2.5,-4,9.5,...]      Increase/decrease volume by X dB
+  -v, --volume=[-60,-20.5,0,18,...]     Set absolute volume dB level
   -t, --toggle                          Toggle mute on/off
   -m, --mute                            Set mute on
   -u, --unmute                          Set mute off
-  -n, --notify[=0,1,1.5,3,...]          Show system notification and specify
+  -n, --notify[=1,1.5,3,...]            Show system notification and specify
                                         optional timeout (default: 1.5 seconds)
 
 Help options:
