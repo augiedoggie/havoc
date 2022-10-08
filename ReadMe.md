@@ -6,8 +6,8 @@
 
 Output from running `havoc` with no arguments:
 ```
-Volume: 0 (min=-60, max=18, step=0.1)
-State: Not Muted
+Gain: 0 dB (min=-60, max=18, step=0.1)
+Mute: Off
 ```
 
 The list of options in the `havoc --help` output:

@@ -82,10 +82,8 @@ VolumeControl::GetVolume(float* volume)
 		return B_ERROR;
 
 	size_t size = sizeof(*volume);
-	if (fGainParameter->GetValue(volume, &size, NULL) != B_OK || isnan(*volume)) {
-		*volume = -99.0;
+	if (fGainParameter->GetValue(volume, &size, NULL) != B_OK || isnan(*volume))
 		return B_ERROR;
-	}
 
 	return B_OK;
 }

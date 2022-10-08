@@ -79,13 +79,13 @@ public:
 
 		// don't return after changing mute so we can also adjust volume
 		if (gToggleArg != 0) {
-			std::cout << (fVolume->IsMuted() ? "Un-Muting" : "Muting") << std::endl;
+			std::cout << (fVolume->IsMuted() ? "Unmuting" : "Muting") << std::endl;
 			fVolume->ToggleMute();
 		} else if (gMuteArg != 0) {
 			std::cout << "Muting" << std::endl;
 			fVolume->SetMute(true);
 		} else if (gUnMuteArg != 0) {
-			std::cout << "Un-Muting" << std::endl;
+			std::cout << "Unmuting" << std::endl;
 			fVolume->SetMute(false);
 		}
 
@@ -129,9 +129,9 @@ public:
 
 		if (volume != kInitialArgVal && !fArgReceived)
 			// no arguments were given, just list our current state
-			outputString.SetToFormat("Volume(gain): %g (min=%g, max=%g, step=%g)\nState: %s",
+			outputString.SetToFormat("Gain: %g dB (min=%g, max=%g, step=%g)\nMute: %s",
 				volume, fVolume->GetMinVolume(), fVolume->GetMaxVolume(), fVolume->GetStepSize(),
-				fVolume->IsMuted() ? "Muted" : "Not Muted");
+				fVolume->IsMuted() ? "On" : "Off");
 
 		if (outputString.Length() > 0)
 			std::cout << outputString << std::endl;
