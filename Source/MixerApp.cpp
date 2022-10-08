@@ -63,18 +63,25 @@ public:
 
 	virtual void ArgvReceived(int32 argc, char** argv) {
 
-		fArgReceived = true;
-
 		poptContext optionContext = poptGetContext("VolumeControl", argc, (const char**)argv, optionsTable, 0);
 
 		int rc = poptGetNextOpt(optionContext);
 		if (rc < -1) {
 			std::cout << poptBadOption(optionContext, 0) << " : " << poptStrerror(rc) << std::endl;
 			poptPrintHelp(optionContext, stderr, 0);
+			poptFreeContext(optionContext);
+			Quit();
 			return;
 		}
 
-		poptFreeContext(optionContext);
+		const char* extraArg = poptPeekArg(optionContext);
+		if (extraArg != NULL) {
+			std::cout << extraArg << " : unknown extra argument" << std::endl;
+			poptPrintHelp(optionContext, stderr, 0);
+			poptFreeContext(optionContext);
+			Quit();
+			return;
+		}
 
 		// compare against kInitialArgVal because '-n' will actually be '-n=0'
 		if (gNotifyArg != kInitialArgVal) {
@@ -84,43 +91,38 @@ public:
 				fNotificationTimeout = gNotifyArg;
 		}
 
-		if (fVolume->InitCheck() != B_OK)
+		if (fVolume->InitCheck() != B_OK) {
+			poptFreeContext(optionContext);
 			return;
+		}
 
-		// don't return after changing mute so we can also adjust volume
+		// don't allow multiple mute operations at the same time
 		if (gToggleArg != 0) {
 			std::cout << (fVolume->IsMuted() ? "Unmuting" : "Muting") << std::endl;
 			fVolume->ToggleMute();
+			fArgReceived = true;
 		} else if (gMuteArg != 0) {
 			std::cout << "Muting" << std::endl;
 			fVolume->SetMute(true);
+			fArgReceived = true;
 		} else if (gUnMuteArg != 0) {
 			std::cout << "Unmuting" << std::endl;
 			fVolume->SetMute(false);
+			fArgReceived = true;
 		}
 
+		// don't allow multiple volume operations at the same time
 		if (gAdjustArg != 0) {
 			std::cout << "Adjust volume: " << gAdjustArg << std::endl;
 			fVolume->AdjustVolume(gAdjustArg);
-			return;
-		}
-
-		// compare against kInitialArgVal in case we get a request like --volume=0
-		if (gVolumeArg != kInitialArgVal) {
+			fArgReceived = true;
+		} else if (gVolumeArg != kInitialArgVal) { // compare against kInitialArgVal in case we get a request like --volume=0
 			std::cout << "Set volume: " << gVolumeArg << std::endl;
 			fVolume->SetVolume(gVolumeArg);
-			return;
+			fArgReceived = true;
 		}
 
-		// we can return if we've handled a mute arg
-		if (gToggleArg != 0 || gMuteArg != 0 || gUnMuteArg != 0)
-			return;
-
-		// only a notification for the current status was requested
-		if (fNotificationTimeout != kInitialArgVal)
-			return;
-
-		poptPrintHelp(optionContext, stderr, 0);
+		poptFreeContext(optionContext);
 	}
 
 
@@ -171,7 +173,7 @@ public:
 			delete notification;
 		}
 
-		be_app->PostMessage(B_QUIT_REQUESTED);
+		Quit();
 	}
 
 
