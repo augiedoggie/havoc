@@ -1,0 +1,6 @@
+1	English	x-vnd.cpr.VolumeControl	1129043391
+Error initializing mixer control!	VolumeControl		Error initializing mixer control!
+System Volume	VolumeControl		System Volume
+Audio Muted	VolumeControl		Audio Muted
+Error getting volume from mixer!	VolumeControl		Error getting volume from mixer!
+Gain: %g dB	VolumeControl		Gain: %g dB

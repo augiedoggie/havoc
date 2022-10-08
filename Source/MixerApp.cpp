@@ -14,6 +14,16 @@
 #include <iostream>
 
 
+#ifdef HAIKU_ENABLE_I18N
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "VolumeControl"
+#else
+#define B_TRANSLATE(x) x
+#endif
+
+
 static const float kInitialArgVal = -99999.0;
 
 float gAdjustArg = 0.0;
@@ -120,9 +130,9 @@ public:
 
 		if (fVolume->InitCheck() == B_OK) {
 			if (fVolume->GetVolume(&volume) != B_OK)
-				outputString = "Error getting volume from mixer!";
+				outputString = B_TRANSLATE("Error getting volume from mixer!");
 		} else
-			outputString = "Error initializing mixer control!";
+			outputString = B_TRANSLATE("Error initializing mixer control!");
 
 		if (volume == 0)
 			volume = 0.0; // avoid a floating point -0
@@ -147,15 +157,15 @@ public:
 					notification->SetIcon(bitmap);
 					delete bitmap;
 				}
-				outputString = "Audio Muted";
+				outputString = B_TRANSLATE("Audio Muted");
 			} else {
 				notification = new BNotification(B_PROGRESS_NOTIFICATION);
 				notification->SetProgress((volume - fVolume->GetMinVolume()) / (fVolume->GetMaxVolume() - fVolume->GetMinVolume()));
-				outputString.SetToFormat("Gain: %g dB", volume);
+				outputString.SetToFormat(B_TRANSLATE("Gain: %g dB"), volume);
 			}
 
 			notification->SetTitle(outputString);
-			notification->SetGroup("System Volume");
+			notification->SetGroup(B_TRANSLATE("System Volume"));
 			notification->SetMessageID("volume_control_status");
 			notification->Send(fNotificationTimeout * 1000 * 1000);
 			delete notification;
