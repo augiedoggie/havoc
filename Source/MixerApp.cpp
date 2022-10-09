@@ -63,11 +63,11 @@ public:
 
 	virtual void ArgvReceived(int32 argc, char** argv) {
 
-		poptContext optionContext = poptGetContext("VolumeControl", argc, (const char**)argv, optionsTable, 0);
+		poptContext optionContext = poptGetContext("VolumeControl", argc, const_cast<const char**>(argv), optionsTable, 0);
 
 		int rc = poptGetNextOpt(optionContext);
 		if (rc < -1) {
-			std::cout << poptBadOption(optionContext, 0) << " : " << poptStrerror(rc) << std::endl;
+			std::cerr << poptBadOption(optionContext, 0) << " : " << poptStrerror(rc) << std::endl;
 			poptPrintHelp(optionContext, stderr, 0);
 			poptFreeContext(optionContext);
 			Quit();
@@ -76,7 +76,7 @@ public:
 
 		const char* extraArg = poptPeekArg(optionContext);
 		if (extraArg != NULL) {
-			std::cout << extraArg << " : unknown extra argument" << std::endl;
+			std::cerr << extraArg << " : unknown extra argument" << std::endl;
 			poptPrintHelp(optionContext, stderr, 0);
 			poptFreeContext(optionContext);
 			Quit();
