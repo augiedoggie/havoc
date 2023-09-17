@@ -10,17 +10,16 @@
 #include <IconUtils.h>
 #include <Notification.h>
 #include <Resources.h>
-
 #include <iostream>
 
 
 #ifdef HAIKU_ENABLE_I18N
-#include <Catalog.h>
+	#include <Catalog.h>
 
-#undef B_TRANSLATION_CONTEXT
-#define B_TRANSLATION_CONTEXT "VolumeControl"
+	#undef B_TRANSLATION_CONTEXT
+	#define B_TRANSLATION_CONTEXT "VolumeControl"
 #else
-#define B_TRANSLATE(x) x
+	#define B_TRANSLATE(x) x
 #endif
 
 
@@ -34,12 +33,12 @@ int gUnMuteArg = 0;
 float gNotifyArg = kInitialArgVal;
 
 const struct poptOption optionsTable[] = {
-	{ "adjust",	'a', POPT_ARG_FLOAT,	&gAdjustArg,	0, "Increase/decrease volume by X dB",	"[1,-2.5,-4,9.5,...]" },
-	{ "volume",	'v', POPT_ARG_FLOAT,	&gVolumeArg,	0, "Set absolute volume dB level",		"[-60,-20.5,0,18,...]" },
-	{ "toggle",	't', POPT_ARG_NONE,		&gToggleArg,	0, "Toggle mute on/off",				NULL },
-	{ "mute",	'm', POPT_ARG_NONE,		&gMuteArg,		0, "Set mute on",						NULL },
-	{ "unmute",	'u', POPT_ARG_NONE,		&gUnMuteArg,	0, "Set mute off",						NULL },
-	{ "notify",	'n', POPT_ARG_FLOAT | POPT_ARGFLAG_OPTIONAL,	&gNotifyArg,	0, "Show system notification and specify optional timeout (default: 1.5 seconds)",	"1,1.5,3,..."},
+	{"adjust",	'a', POPT_ARG_FLOAT,	&gAdjustArg,	0, "Increase/decrease volume by X dB",	"[1,-2.5,-4,9.5,...]"},
+	{"volume",	'v', POPT_ARG_FLOAT,	&gVolumeArg,	0, "Set absolute volume dB level",		"[-60,-20.5,0,18,...]"},
+	{"toggle",	't', POPT_ARG_NONE,		&gToggleArg,	0, "Toggle mute on/off",				NULL},
+	{"mute",	'm', POPT_ARG_NONE,		&gMuteArg,		0, "Set mute on",						NULL},
+	{"unmute",	'u', POPT_ARG_NONE,		&gUnMuteArg,	0, "Set mute off",						NULL},
+	{"notify",	'n', POPT_ARG_FLOAT | POPT_ARGFLAG_OPTIONAL,	&gNotifyArg,	0, "Show system notification and specify optional timeout (default: 1.5 seconds)",	"1,1.5,3,..."},
 	POPT_AUTOHELP
 	POPT_TABLEEND
 };
@@ -56,13 +55,15 @@ public:
 		{}
 
 
-	virtual ~MixerApp() {
+	virtual ~MixerApp()
+	{
 		delete fVolume;
 	}
 
 
-	virtual void ArgvReceived(int32 argc, char** argv) {
-
+	virtual void
+	ArgvReceived(int32 argc, char** argv)
+	{
 		poptContext optionContext = poptGetContext("VolumeControl", argc, const_cast<const char**>(argv), optionsTable, 0);
 
 		int rc = poptGetNextOpt(optionContext);
@@ -126,7 +127,9 @@ public:
 	}
 
 
-	virtual void ReadyToRun() {
+	virtual void
+	ReadyToRun()
+	{
 		float volume = kInitialArgVal;
 		BString outputString;
 
@@ -183,7 +186,9 @@ private:
 	VolumeControl*	fVolume;
 
 
-	BBitmap* _LoadResourceBitmap(const char* name, int32 size) {
+	BBitmap*
+	_LoadResourceBitmap(const char* name, int32 size)
+	{
 		BResources* resources = be_app->AppResources();
 		if (resources == NULL)
 			return NULL;
